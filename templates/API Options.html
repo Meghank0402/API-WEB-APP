@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API Options</title>
+</head>
+<body>
+    <h1>API Options</h1>
+    <button id="fetchOptions">Fetch Options</button>
+    <div id="optionsList"></div>
+    
+    <script>
+        // JavaScript code to fetch options and display them
+        document.getElementById('fetchOptions').addEventListener('click', function () {
+            fetch('/get_options', {
+                method: 'GET',
+                headers: {
+                    'API-Key': 'your_api_key' // Replace with your actual API key
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const optionsList = document.getElementById('optionsList');
+                optionsList.innerHTML = '';
+                data.forEach(option => {
+                    const optionItem = document.createElement('div');
+                    optionItem.textContent = option;
+                    optionsList.appendChild(optionItem);
+                });
+            })
+            .catch(error => console.error(error));
+        });
+    </script>
+</body>
+</html>

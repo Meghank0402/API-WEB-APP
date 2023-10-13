@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Chatbot</title>
+</head>
+<body>
+    <div>
+        <h1>AI Chatbot</h1>
+    </div>
+    <div id="chat">
+        <div id="chat-messages"></div>
+        <input type="text" id="user-input" placeholder="Type your message..." onkeydown="sendMessage(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function appendUserMessage(message) {
+            document.getElementById('chat-messages').innerHTML += `<div class="user-message">You: ${message}</div>`;
+        }
+
+        function appendAssistantMessage(message) {
+            document.getElementById('chat-messages').innerHTML += `<div class="assistant-message">AI: ${message}</div>`;
+        }
+
+        function sendMessage(event) {
+            if (event && event.key !== 'Enter') {
+                return;
+            }
+
+            const userMessage = document.getElementById('user-input').value;
+            appendUserMessage(userMessage);
+
+            fetch('/chat', {
+                method: 'POST',
+                body: new URLSearchParams({ 'user_input': userMessage }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const assistantReply = data.assistant_reply;
+                appendAssistantMessage(assistantReply);
+                document.getElementById('user-input').value = '';
+            });
+        }
+    </script>
+</body>
+</html>
